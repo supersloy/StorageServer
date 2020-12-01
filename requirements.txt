@@ -1,0 +1,7 @@
+djangorestframework
+djongo
+django
+django-cors-headers
+django_gridfs_storage
+psycopg2-binary
+environ
