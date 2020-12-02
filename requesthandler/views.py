@@ -84,7 +84,7 @@ def upload(request, filename):
     newMeta = MapMetaData.create(filename, duration, difficulty, newFile.id)
     newMeta.save(using='metadata')
 
-    return Response(status=status.HTTP_201_CREATED)
+    return Response({'message': 'Map uploaded'}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
@@ -98,3 +98,38 @@ def download(request, pk):
         return FileResponse(open(str(fileName), 'rb'))
     except:
         return JsonResponse({'message': 'Map does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+@api_view(['POST'])
+def update_by_pk(request, pk):
+    try:
+        meta = MapMetaData.objects.using('metadata').get(pk=pk)
+        success = request.query_params.get('success')
+        success = str(success).lower() in ['true', '1', 't', 'yes']
+        return update_meta(meta, success)
+    except:
+        return JsonResponse({'message': 'Map does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+def update_by_title(request, title):
+    try:
+        meta = MapMetaData.objects.using('metadata').get(title=title)
+        success = request.query_params.get('success')
+        success = str(success).lower() in ['true', '1', 't', 'yes']
+        return update_meta(meta, success)
+    except:
+        return JsonResponse({'message': 'Map does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+
+def update_meta(metadata, success: bool):
+    try:
+        if success:
+            metadata.successPlays += 1
+        metadata.plays += 1
+        metadata.save(using='metadata')
+        metadata_serializer = MapMetaDataSerializer(metadata)
+        return JsonResponse(metadata_serializer.data)
+    except:
+        return JsonResponse({'message': 'Update data failed'}, status=status.HTTP_404_NOT_FOUND)
