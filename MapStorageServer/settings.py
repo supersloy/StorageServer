@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'requesthandler.apps.RequesthandlerConfig',
     # CORS
     'corsheaders',
-    'gridfs_storage',
+    #'gridfs_storage',
 ]
 
 MIDDLEWARE = [
@@ -85,22 +85,26 @@ WSGI_APPLICATION = 'MapStorageServer.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'filestorage',
-        'HOST': '127.0.0.1',
-        'PORT': 27017,
+        'NAME': environ.get("POSTGRES_DB", "metadata"),
+        'ENGINE': 'django.db.backends.postgresql',
+        'USER': environ.get("POSTGRES_USER", "postgres"),
+        'PASSWORD': environ.get("POSTGRES_PASSWORD", "password"),
+        'HOST': environ.get("POSTGRES_DB_HOST", "localhost"),
+        'PORT': environ.get("POSTGRES_DB_PORT", 5432),
     },
     'filestorage': {
         'ENGINE': 'djongo',
-        'NAME': 'filestorage',
-        'HOST': '127.0.0.1',
-        'PORT': 27017,
+        'NAME': environ.get("DJONGO_DB", "filestorage"),
+        'HOST': environ.get("POSTGRES_DB_HOST", "localhost"),
+        'PORT': environ.get("POSTGRES_DB_PORT", 27017),
     },
     'metadata': {
-        'NAME': 'metadata',
+        'NAME': environ.get("POSTGRES_DB", "metadata"),
         'ENGINE': 'django.db.backends.postgresql',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
+        'USER': environ.get("POSTGRES_USER", "postgres"),
+        'PASSWORD': environ.get("POSTGRES_PASSWORD", "password"),
+        'HOST': environ.get("POSTGRES_DB_HOST", "localhost"),
+        'PORT': environ.get("POSTGRES_DB_PORT", 5432),
     }
 }
 
@@ -142,11 +146,11 @@ USE_TZ = True
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-# defaults to default local mongodb server
-DEFAULT_GRIDFS_URL = 'mongodb://127.0.0.1:27017'
-# if set to None, it will refuse to serve files and raise an Exception
-DEFAULT_GRIDFS_SERVE_URL = None
-DEFAULT_GRIDFS_COLLECTION = 'storage'
-DEFAULT_FILE_STORAGE = 'gridfs_storage.storage.GridFSStorage'
+# # defaults to default local mongodb server
+# DEFAULT_GRIDFS_URL = 'mongodb://127.0.0.1:27017'
+# # if set to None, it will refuse to serve files and raise an Exception
+# DEFAULT_GRIDFS_SERVE_URL = None
+# DEFAULT_GRIDFS_COLLECTION = 'storage'
+# DEFAULT_FILE_STORAGE = 'gridfs_storage.storage.GridFSStorage'
 
 STATIC_URL = '/static/'
