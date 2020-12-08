@@ -21,12 +21,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'g#7oa%0ea@cciqao=qoi#z&727*3h(e*)-h+a+^i71fzo_i^^+'
+SECRET_KEY = environ.get('APP_SECRET', 'change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = environ.get('API_ALLOWED_HOSTS').split(';')
 
 
 # Application definition
@@ -153,4 +153,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 # DEFAULT_GRIDFS_COLLECTION = 'storage'
 # DEFAULT_FILE_STORAGE = 'gridfs_storage.storage.GridFSStorage'
 
+static_root = environ.get('API_STATIC_FILES', 'srv/static')
+os.makedirs(static_root, mode=0o755, exist_ok=True)
+STATIC_ROOT = static_root
+# STATICFILES_DIRS = [
+#     BASE_DIR / 'common-static',
+# ]
 STATIC_URL = '/static/'
