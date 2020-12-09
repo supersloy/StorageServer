@@ -95,8 +95,13 @@ DATABASES = {
     'filestorage': {
         'ENGINE': 'djongo',
         'NAME': environ.get("DJONGO_DB", "filestorage"),
-        'HOST': environ.get("POSTGRES_DB_HOST", "localhost"),
-        'PORT': environ.get("POSTGRES_DB_PORT", 27017),
+        'CLIENT': {
+                'host': environ.get("DJONGO_DB_HOST", "localhost"),
+                'port': int(environ.get("DJONGO_DB_PORT", 27017)),
+                'username': environ.get("DJONGO_DB_USER", "mongo"),
+                'password': environ.get("DJONGO_DB_PASSWORD", "mongo"),
+                'authMechanism': 'SCRAM-SHA-1'
+            }
     },
     'metadata': {
         'NAME': environ.get("POSTGRES_DB", "metadata"),
