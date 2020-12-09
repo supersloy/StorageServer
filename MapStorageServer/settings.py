@@ -93,10 +93,12 @@ DATABASES = {
         'PORT': environ.get("POSTGRES_DB_PORT", 5432),
     },
     'filestorage': {
-        'ENGINE': 'djongo',
-        'NAME': environ.get("DJONGO_DB", "filestorage"),
+        'NAME': environ.get("POSTGRES_DB", "metadata"),
+        'ENGINE': 'django.db.backends.postgresql',
+        'USER': environ.get("POSTGRES_USER", "postgres"),
+        'PASSWORD': environ.get("POSTGRES_PASSWORD", "password"),
         'HOST': environ.get("POSTGRES_DB_HOST", "localhost"),
-        'PORT': environ.get("POSTGRES_DB_PORT", 27017),
+        'PORT': environ.get("POSTGRES_DB_PORT", 5432),
     },
     'metadata': {
         'NAME': environ.get("POSTGRES_DB", "metadata"),
